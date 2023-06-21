@@ -1,12 +1,12 @@
 import express, {Express,Request,Response} from "express"
 import * as dotenv from "dotenv"
-import mongoose from "mongoose"
 import cors from "cors"
 import bodyParser from "body-parser"
 import bcrypt from "bcrypt"
-import dbConnect from "./db/database"
-import User from "./db/userModel"
+import dbConnect from "./config/database"
+import User from "./models/userModel"
 import jwt from "jsonwebtoken"
+import isAuthenticated from "./middleware/isAuthenticated.middleware"
 
 dotenv.config()
 
@@ -23,25 +23,39 @@ app.get("/",( req : Request ,res : Response)=>{
     console.log("Working")
 })
 
+app.get("/check",isAuthenticated,(req: Request,res: Response)=>{
+    
+    res.json({message: "Check"})
+})
+
 app.post("/register",(req : Request,res : Response)=>{
-    bcrypt.hash(req.body.password,5)
-    .then((hashedPassword)=>{
-        console.log(req.body)
-        const user = new User({
-            email: req.body.email,
-            password: hashedPassword
-        })
-        user.save()
-        .then((result)=>{
-            res.status(201).send({message: "User saved successfully",result: result})
-        })
-        .catch((e)=>{
-            res.status(500).send({message : "User didn't save successfully",error : e})
-        })
+    User.findOne({email: req.body.email})
+    .then(user => {
+        if(!user){
+            bcrypt.hash(req.body.password,5)
+            .then((hashedPassword)=>{
+                const user = new User({
+                    email: req.body.email,
+                    password: hashedPassword
+                })
+                user.save()
+                .then((result)=>{
+                    res.status(201).send({message: "User saved successfully",result: result})
+                })
+                .catch((e)=>{
+                    res.status(500).send({message : "User didn't save successfully",error : e})
+                })
+            })
+            .catch((e)=>{
+                res.status(500).send({message : "Password didn't hash successfully",error : e})
+            })
+        }
+        else{
+            res.status(201).send({message: "User already exists"})
+        }
     })
-    .catch((e)=>{
-        res.status(500).send({message : "Password didn't hash successfully",error : e})
-    })
+    
+    
 
 })
 
@@ -58,7 +72,7 @@ app.post("/login",(req: Request,res: Response)=>{
                 userId : user._id,
                 userEmail : user.email,
             },
-            "RANDOM-TOKEN",
+            process.env.SECRET_KEY,
             {expiresIn: "24h"}
             )
             res.status(200).send({
