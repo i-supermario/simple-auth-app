@@ -1,27 +1,22 @@
 import { Button, Input } from "@chakra-ui/react";
 import { FormEvent, useState } from "react";
-import { Navigate, redirect, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
+import { useDispatch } from "react-redux";
+import { fetchRegister } from "../thunks/fetchRegister";
+import { ThunkDispatch } from "redux-thunk";
 
 function SignUpForm() : JSX.Element {
 
     const navigate = useNavigate()
+
     const [email, setEmail] = useState<string>('')
-    const [password, setPassword] = useState('')
+    const [password, setPassword] = useState<string>('')
+
+    const dispatch = useDispatch<ThunkDispatch<any,any,any>>()
 
 
-    function handleClick(e: FormEvent){
-        console.log("inside")
-        // e.preventDefault()
-        const requestOptions = {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({email: email, password: password})
-        };
-        fetch("http://localhost:8080/register",requestOptions)
-        .then((res)=>{
-            console.log(res.status)
-        })
-    }
+
+    const handleClick = () => dispatch(fetchRegister( { email: email, password: password }))
 
     return (
         <>

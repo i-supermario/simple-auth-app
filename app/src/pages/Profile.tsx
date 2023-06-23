@@ -1,10 +1,14 @@
 import { Box, Button, Card, CardBody, CardHeader, Container, Divider, Flex, HStack, Heading, Image, Stack, StackDivider, Text } from "@chakra-ui/react";
 import Header from "../components/header";
 import ProfilePic from "../media/logo192.png"
-
+import { useLocation } from "react-router";
 
 
 export default function Profile(){
+
+    const location = useLocation()
+    console.log(location.state)
+
     return(
         <>
             <Header/>
