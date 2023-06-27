@@ -1,4 +1,4 @@
-import { Button, Image, useColorMode } from "@chakra-ui/react"
+import { Image, useColorMode } from "@chakra-ui/react"
 import Logo from "../media/devchallenges.svg"
 
 

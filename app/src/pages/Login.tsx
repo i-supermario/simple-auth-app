@@ -1,10 +1,8 @@
-import { Button, Card, CardBody, CardHeader, Container, Stack, Image, Input, Spacer, Text, HStack, CardFooter } from "@chakra-ui/react";
-import Logo from "../media/devchallenges.svg"
+import { Button, Card, CardBody, CardHeader, Container, Stack, Image, Input, Text, HStack, CardFooter } from "@chakra-ui/react";
 import GoogleLogo from "../media/Google.svg"
 import FacebookLogo from "../media/Facebook.svg"
 import TwitterLogo from "../media/Twitter.svg"
 import GithubLogo from "../media/Gihub.svg"
-import Header from "../components/header";
 import ToggleColor from "../components/togglecolor";
 import { Link } from "react-router-dom";
 
