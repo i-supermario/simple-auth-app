@@ -89,7 +89,7 @@ app.post("/login", (req, res) => {
             }, process.env.SECRET_KEY, { expiresIn: "24h" });
             res.status(200).send({
                 message: "User logged in successfully",
-                email: user.email,
+                user: user,
                 token: token
             });
         })

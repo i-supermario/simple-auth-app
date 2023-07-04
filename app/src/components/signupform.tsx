@@ -2,7 +2,7 @@ import { Button, Input } from "@chakra-ui/react";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { useDispatch } from "react-redux";
-import { fetchRegister } from "../thunks/fetchRegister";
+import { fetchRegister } from "../thunks/fetchregister";
 import { AppDispatch } from "../store";
 
 function SignUpForm() : JSX.Element {

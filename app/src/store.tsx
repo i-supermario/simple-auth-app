@@ -1,5 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
-import registerReducer from "./thunks/fetchRegister"
+import { registerReducer } from "./reducers/profile";
+
 
 export const store = configureStore({
     reducer: {

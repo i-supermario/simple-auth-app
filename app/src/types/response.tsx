@@ -1,6 +1,7 @@
 
 export interface registerResponse{
     message: string,
+    token?: string,
     result: {
         email: string,
         password: string,
@@ -8,3 +9,5 @@ export interface registerResponse{
         __v: number
     }
 }
+
+export interface loginResponse extends registerResponse{}

@@ -77,7 +77,7 @@ app.post("/login",(req: Request,res: Response)=>{
             )
             res.status(200).send({
                 message: "User logged in successfully",
-                email: user.email,
+                user: user,
                 token: token
             })
         })

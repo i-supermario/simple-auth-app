@@ -5,6 +5,7 @@ import TwitterLogo from "../media/Twitter.svg"
 import GithubLogo from "../media/Gihub.svg"
 import ToggleColor from "../components/togglecolor";
 import { Link } from "react-router-dom";
+import LoginForm from "../components/loginform";
 
 const Login = ():JSX.Element => {
     return(
@@ -17,9 +18,7 @@ const Login = ():JSX.Element => {
                     <CardBody>
                         <Stack alignContent="center" rowGap="2" >
                             <Text as="b" >Login</Text>
-                            <Input placeholder="Email" size="md"/>
-                            <Input placeholder="Password" size="md"/>
-                            <Button colorScheme="blue">Login</Button>
+                            <LoginForm/>
                             <Text fontSize="xs" fontWeight="thin" textAlign="center" >or continue with these social profile</Text>
                             <HStack justifyContent="space-around" >
                                 <Image src={GoogleLogo} />
