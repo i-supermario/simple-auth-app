@@ -60,7 +60,7 @@ app.post("/register", (req, res) => {
                 });
                 user.save()
                     .then((result) => {
-                    res.status(201).send({ message: "User saved successfully", result: result });
+                    res.status(201).send({ message: "User saved successfully", user: result });
                 })
                     .catch((e) => {
                     res.status(500).send({ message: "User didn't save successfully", error: e });

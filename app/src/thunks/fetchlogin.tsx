@@ -23,6 +23,7 @@ export const fetchLogin = createAsyncThunk<loginResponse,Credentials,{ rejectVal
         }
 
         const data: loginResponse = await response.json()
+        console.log(data.user)
         return data
     }
 )

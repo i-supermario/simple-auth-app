@@ -1,15 +1,12 @@
 export interface Credentials{
-    email: string,
-    password: string
+    email: string | undefined,
+    password: string | undefined
 }
 
-export interface UserI{
-    _id: string,
-    name: string,
+export interface UserI extends Credentials{
+    name?: string,
     bio?: string,
-    phone?: string
-}
-
-export interface ProfileI extends UserI,Credentials {
-    
+    mobile?: string,
+    _id: string | undefined,
+    __v: number | undefined
 }

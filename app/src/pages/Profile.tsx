@@ -1,8 +1,14 @@
 import { Box, Button, Card, CardBody, CardHeader, Divider, Flex, Heading, Image, Input, Stack, StackDivider, Text } from "@chakra-ui/react";
 import Header from "../components/header";
 import ProfilePic from "../media/logo192.png"
-import { useSelector } from "react-redux";
-import { selectData, selectStatus, statusValues } from "../reducers/profile";
+import { useDispatch, useSelector } from "react-redux";
+import { selectData, selectStatus, statusValues, update } from "../reducers/profile";
+import { editable, notEditable, selectProfileEditableStatus } from "../reducers/editableprofile";
+import { AppDispatch } from "../store";
+import { useState } from "react";
+import { UserI } from "../types/common";
+
+
 
 
 
@@ -10,10 +16,19 @@ import { selectData, selectStatus, statusValues } from "../reducers/profile";
 export default function Profile(){
 
     const status = useSelector(selectStatus)
-    const data = useSelector(selectData)?.result
+    const data = useSelector(selectData)?.user
+    const editableStatus = useSelector(selectProfileEditableStatus)
+    const dispatch = useDispatch<AppDispatch>()
+    const [profileName,setProfileName] = useState<string>()
+    const [profileEmail,setProfileEmail] = useState<string>()
+    const [profileBio,setProfileBio] = useState<string>()
+    const [profileMobile,setProfileMobile] = useState<string>()
+    const [profilePassword,setProfilePassword] = useState<string>()
 
 
-    if(status===statusValues.SignedUp){
+    if(editableStatus){
+        console.log("editable")
+        console.log(editableStatus)
         return(
             <>
                 <Header/>
@@ -31,8 +46,12 @@ export default function Profile(){
                                         Some random info you want to put out there
                                     </Text>
                                 </Box>
-                                <Button colorScheme="gray">
-                                    Edit
+                                <Button type="button" colorScheme="blackAlpha" onClick={(e)=>{
+                                        e.preventDefault()
+                                        dispatch(notEditable())
+                                        dispatch(update({  name : profileName, bio: profileBio, mobile: profileMobile , email: profileEmail, password : profilePassword, __v : data?.__v, _id: data?._id }))
+                                    }}>
+                                    Save
                                 </Button>
                             </Flex>
                         </CardHeader>
@@ -52,7 +71,7 @@ export default function Profile(){
                                         NAME
                                     </Text>
                                     <Flex width="xs">
-                                        <Input type="text" defaultValue={data?.email}/>
+                                        <Input type="text" value={profileName} onChange={(e)=>{setProfileName(e.target.value)}}/>
                                     </Flex>
                                 </Flex>
                                 <Flex justifyContent="space-around" >
@@ -60,7 +79,7 @@ export default function Profile(){
                                         BIO
                                     </Text>
                                     <Flex width="xs">
-                                        <Input type="text" defaultValue={"enter some randon shit"}/>
+                                        <Input type="text" value={profileBio} onChange={(e)=>{setProfileBio(e.target.value)}}/>
                                     </Flex>
                                 </Flex>
                                 <Flex justifyContent="space-around" >
@@ -68,7 +87,7 @@ export default function Profile(){
                                         PHONE
                                     </Text>
                                     <Flex width="xs">
-                                        <Input type="text" defaultValue={"tring tring!!"}/>
+                                        <Input type="text" value={profileMobile} onChange={(e)=>{setProfileMobile(e.target.value)}}/>
                                     </Flex>
                                 </Flex>
                                 <Flex justifyContent="space-around" >
@@ -76,7 +95,7 @@ export default function Profile(){
                                         EMAIL
                                     </Text>
                                     <Flex width="xs">
-                                        <Input type="text" defaultValue={data?.email}/>
+                                        <Input type="text" value={profileEmail}/>
                                     </Flex>
                                 </Flex>
                                 <Flex justifyContent="space-around" >
@@ -84,7 +103,7 @@ export default function Profile(){
                                         PASSWORD
                                     </Text>
                                     <Flex width="xs">
-                                        <Input type="password" defaultValue={data?.password} />
+                                        <Input type="password" value={profilePassword} onChange={(e)=>{setProfilePassword(e.target.value)}} />
                                     </Flex>
                                 </Flex>
                             </Stack>
@@ -94,7 +113,9 @@ export default function Profile(){
             </>
         )
     }
-    if(status===statusValues.LoggedIn){
+    else if(status===statusValues.LoggedIn || status===statusValues.SignedUp || !editableStatus){
+        console.log("not editable")
+        console.log(editableStatus)
         return(
             <>
                 <Header/>
@@ -112,7 +133,10 @@ export default function Profile(){
                                         Some random info you want to put out there
                                     </Text>
                                 </Box>
-                                <Button colorScheme="gray">
+                                <Button colorScheme="gray" onClick={(e)=>{
+                                        e.preventDefault()
+                                        dispatch(editable())
+                                    }}>
                                     Edit
                                 </Button>
                             </Flex>
@@ -134,7 +158,7 @@ export default function Profile(){
                                     </Text>
                                     <Flex width="xs">
                                         <Text as="b">
-                                        {data?.email}
+                                        {data?.name}
                                         </Text>
                                     </Flex>
                                 </Flex>
@@ -144,7 +168,7 @@ export default function Profile(){
                                     </Text>
                                     <Flex width="xs">
                                         <Text as="b">
-                                        oaschknajb
+                                        {data?.bio}
                                         </Text>
                                     </Flex>
                                 </Flex>
@@ -154,7 +178,7 @@ export default function Profile(){
                                     </Text>
                                     <Flex width="xs">
                                         <Text as="b">
-                                        989283828
+                                        {data?.mobile}
                                         </Text>
                                     </Flex>
                                 </Flex>

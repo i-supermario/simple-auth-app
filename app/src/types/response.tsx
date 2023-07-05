@@ -1,13 +1,9 @@
+import { UserI } from "./common";
 
 export interface registerResponse{
     message: string,
     token?: string,
-    result: {
-        email: string,
-        password: string,
-        _id: string,
-        __v: number
-    }
+    user: UserI
 }
 
 export interface loginResponse extends registerResponse{}

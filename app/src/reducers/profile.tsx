@@ -3,6 +3,7 @@ import { fetchLogin } from "../thunks/fetchlogin"
 import { fetchRegister } from "../thunks/fetchregister"
 import { registerResponse } from "../types/response";
 import { RootState } from "../store";
+import { UserI } from "../types/common";
 
 export enum statusValues{
     Idle = 'idle',
@@ -23,11 +24,15 @@ const initialState : registerState = {
 }
 
 
-const registerSlice = createSlice({
+
+
+const profileSlice = createSlice({
     name: "register",
     initialState,
     reducers: {  
-        
+            update(state, payload : { payload: UserI } ){
+                
+            }
         }
         ,
     extraReducers : (builders) => {
@@ -61,8 +66,10 @@ const registerSlice = createSlice({
     }
 })
 
-export const registerReducer = registerSlice.reducer
+export const profileReducer = profileSlice.reducer
 
-export const selectStatus = (state: RootState) => state.register.status;
+export const { update } = profileSlice.actions
 
-export const selectData = (state: RootState) => state.register.data;
+export const selectStatus = (state: RootState) => state.profile.status
+
+export const selectData = (state: RootState) => state.profile.data;

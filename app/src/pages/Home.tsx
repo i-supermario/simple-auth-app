@@ -7,11 +7,8 @@ import ToggleColor from "../components/togglecolor";
 import { Link } from "react-router-dom";
 import SignUpForm from "../components/signupform";
 
-type AppProps = {
-    message : string | null
-}
 
-const Home = ({message: string}:AppProps):JSX.Element => {
+const Home = ():JSX.Element => {
 
     return(
         <>

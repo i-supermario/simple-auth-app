@@ -6,6 +6,10 @@ import { ChakraProvider } from '@chakra-ui/react'
 import theme from './theme';
 import { Provider } from 'react-redux';
 import store from './store';
+import { PersistGate } from 'redux-persist/lib/integration/react';
+import { persistStore } from 'redux-persist';
+
+const persistedStore = persistStore(store)
 
 
 const root = ReactDOM.createRoot(
@@ -14,7 +18,9 @@ const root = ReactDOM.createRoot(
 root.render(
     <ChakraProvider theme={theme}>
       <Provider store={store}>
-        <App />
+        <PersistGate persistor={persistedStore} >
+          <App />
+        </PersistGate>
       </Provider>
     </ChakraProvider>
 );
