@@ -31,7 +31,15 @@ const profileSlice = createSlice({
     initialState,
     reducers: {  
             update(state, payload : { payload: UserI } ){
-                
+                if(state.data){
+                    // state.data.user.__v = payload.payload.__v
+                    state.data.user.name = payload.payload.name
+                    // state.data.user.email = payload.payload.email
+                    state.data.user.password = payload.payload.password
+                    state.data.user.bio = payload.payload.bio
+                    // state.data.user._id = payload.payload._id
+                    state.data.user.mobile = payload.payload.mobile
+                }
             }
         }
         ,

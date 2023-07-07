@@ -15,7 +15,19 @@ const userSchema = new mongoose_1.default.Schema({
         type: String,
         required: [true, "Please provide a password"],
         unique: false
-    }
+    },
+    name: {
+        type: String,
+        required: false,
+    },
+    mobile: {
+        type: String,
+        required: false,
+    },
+    bio: {
+        type: String,
+        required: false,
+    },
 });
 const User = mongoose_1.default.model('User', userSchema);
 exports.default = User;

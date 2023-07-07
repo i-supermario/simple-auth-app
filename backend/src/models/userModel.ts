@@ -1,8 +1,11 @@
 import mongoose from "mongoose"
 
-export interface IUser extends mongoose.Document{
+export interface UserI extends mongoose.Document{
     email: string,
-    password: string
+    password: string,
+    name?: string,
+    mobile?: string,
+    bio?: string
 };
 
 
@@ -16,8 +19,22 @@ const userSchema = new mongoose.Schema({
         type: String,
         required : [true, "Please provide a password"],
         unique : false
-    }
+    },
+    name:{
+        type: String,
+        required : false,
+    },
+    mobile:{
+        type: String,
+        required : false,
+    },
+    bio:{
+        type: String,
+        required : false,
+    },
+
+
 })
 
-const User = mongoose.model<IUser>('User',userSchema)
+const User = mongoose.model<UserI>('User',userSchema)
 export default User

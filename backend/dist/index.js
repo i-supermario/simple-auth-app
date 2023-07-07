@@ -45,8 +45,30 @@ app.get("/", (req, res) => {
     res.send({ message: "Working" });
     console.log("Working");
 });
-app.get("/check", isAuthenticated_middleware_1.default, (req, res) => {
-    res.json({ message: "Check" });
+app.put("/update", isAuthenticated_middleware_1.default, (req, res) => {
+    const updatedUser = req.body;
+    userModel_1.default.findOne({ email: updatedUser.email })
+        .then(user => {
+        if (user) {
+            if (updatedUser.name) {
+                user.name = updatedUser.name;
+            }
+            if (updatedUser.bio) {
+                user.bio = updatedUser.bio;
+            }
+            if (updatedUser.mobile) {
+                user.mobile = updatedUser.mobile;
+            }
+            if (updatedUser.name) {
+                user.mobile = updatedUser.mobile;
+            }
+            user.save();
+        }
+        else {
+            res.status(400).send({ message: "User not found" });
+        }
+    });
+    res.status(200).json({ message: "User updated Successfully" });
 });
 app.post("/register", (req, res) => {
     userModel_1.default.findOne({ email: req.body.email })
@@ -102,6 +124,13 @@ app.post("/login", (req, res) => {
     })
         .catch((e) => {
         res.send({ message: "Email not found", error: e });
+    });
+});
+app.get("/get/:email", (req, res) => {
+    const email = req.params.email;
+    userModel_1.default.findOne({ email: email })
+        .then(user => {
+        res.status(200).json({ message: "Retrieved data successfully", user: user });
     });
 });
 app.listen(process.env.PORT, () => {

@@ -20,7 +20,6 @@ export default function Profile(){
     const editableStatus = useSelector(selectProfileEditableStatus)
     const dispatch = useDispatch<AppDispatch>()
     const [profileName,setProfileName] = useState<string>()
-    const [profileEmail,setProfileEmail] = useState<string>()
     const [profileBio,setProfileBio] = useState<string>()
     const [profileMobile,setProfileMobile] = useState<string>()
     const [profilePassword,setProfilePassword] = useState<string>()
@@ -49,7 +48,7 @@ export default function Profile(){
                                 <Button type="button" colorScheme="blackAlpha" onClick={(e)=>{
                                         e.preventDefault()
                                         dispatch(notEditable())
-                                        dispatch(update({  name : profileName, bio: profileBio, mobile: profileMobile , email: profileEmail, password : profilePassword, __v : data?.__v, _id: data?._id }))
+                                        dispatch(update({  name : profileName, bio: profileBio, mobile: profileMobile , email: data?.email, password : profilePassword, __v : data?.__v, _id: data?._id }))
                                     }}>
                                     Save
                                 </Button>
@@ -95,7 +94,7 @@ export default function Profile(){
                                         EMAIL
                                     </Text>
                                     <Flex width="xs">
-                                        <Input type="text" value={profileEmail}/>
+                                        <Text as="b">{data?.email}</Text>
                                     </Flex>
                                 </Flex>
                                 <Flex justifyContent="space-around" >
