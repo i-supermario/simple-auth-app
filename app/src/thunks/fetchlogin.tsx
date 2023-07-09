@@ -16,14 +16,13 @@ export const fetchLogin = createAsyncThunk<loginResponse,Credentials,{ rejectVal
         const response = await fetch("http://localhost:8080/login",requestOptions)
 
         if(response.status === 400){
-            console.log('rejected why?')
             return thunkAPI.rejectWithValue({
                 message: "Failed to login"
             })
         }
 
         const data: loginResponse = await response.json()
-        console.log(data.user)
+        localStorage.setItem("accessToken",data.token)
         return data
     }
 )

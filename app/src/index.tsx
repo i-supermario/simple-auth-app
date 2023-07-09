@@ -5,11 +5,9 @@ import App from './App';
 import { ChakraProvider } from '@chakra-ui/react'
 import theme from './theme';
 import { Provider } from 'react-redux';
-import store from './store';
+import { store,persistedStore } from './store';
 import { PersistGate } from 'redux-persist/lib/integration/react';
-import { persistStore } from 'redux-persist';
 
-const persistedStore = persistStore(store)
 
 
 const root = ReactDOM.createRoot(

@@ -4,9 +4,9 @@ import cors from "cors"
 import bodyParser from "body-parser"
 import bcrypt from "bcrypt"
 import dbConnect from "./config/database"
-import User, { UserI } from "./models/userModel"
-import jwt from "jsonwebtoken"
+import { User,UserI } from "./models/userModel"
 import isAuthenticated from "./middleware/isAuthenticated.middleware"
+import generateToken from "./middleware/generateToken"
 
 dotenv.config()
 
@@ -23,32 +23,6 @@ app.get("/",( req : Request ,res : Response)=>{
     console.log("Working")
 })
 
-app.put("/update",isAuthenticated,(req: Request,res: Response)=>{
-    const updatedUser = req.body as UserI
-    User.findOne({email: updatedUser.email})
-    .then(user => {
-        if(user){
-            if(updatedUser.name){
-                user.name = updatedUser.name
-            }
-            if(updatedUser.bio){
-                user.bio = updatedUser.bio
-            }
-            if(updatedUser.mobile){
-                user.mobile = updatedUser.mobile
-            }
-            if(updatedUser.name){
-                user.mobile = updatedUser.mobile
-            }
-            user.save()
-        }
-        else{
-            res.status(400).send({message: "User not found"})
-        }
-        
-    })
-    res.status(200).json({message: "User updated Successfully"})
-})
 
 app.post("/register",(req : Request,res : Response)=>{
     User.findOne({email: req.body.email})
@@ -62,7 +36,9 @@ app.post("/register",(req : Request,res : Response)=>{
                 })
                 user.save()
                 .then((result)=>{
-                    res.status(201).send({message: "User saved successfully",user: result})
+                    
+                    const token = generateToken(user._id,user.email)
+                    res.status(201).send({message: "User saved successfully",user: result,token: token})
                 })
                 .catch((e)=>{
                     res.status(500).send({message : "User didn't save successfully",error : e})
@@ -89,14 +65,7 @@ app.post("/login",(req: Request,res: Response)=>{
             if(!check){
                 res.status(400).send({message: "Password is not correct"})
             }
-            const token = jwt.sign(
-                {
-                userId : user._id,
-                userEmail : user.email,
-            },
-            process.env.SECRET_KEY,
-            {expiresIn: "24h"}
-            )
+            const token = generateToken(user._id,user.email)
             res.status(200).send({
                 message: "User logged in successfully",
                 user: user,
@@ -115,6 +84,40 @@ app.post("/login",(req: Request,res: Response)=>{
         res.send({message:"Email not found",error:e})
     })
 })
+
+app.put("/update",isAuthenticated,(req: Request,res: Response)=>{
+    const updatedUser = req.body as UserI
+    User.findOne({email: updatedUser.email})
+    .then(user => {
+        if(user){
+            if(updatedUser.name){
+                user.name = updatedUser.name
+            }
+            if(updatedUser.bio){
+                user.bio = updatedUser.bio
+            }
+            if(updatedUser.mobile){
+                user.mobile = updatedUser.mobile
+            }
+            if(updatedUser.password){
+                bcrypt.hash(updatedUser.password,5)
+                .then(hashedPass=>{
+                    user.password = hashedPass
+                })
+            }
+            user.save()
+            res.status(200).json({message: "User updated Successfully"})
+        }
+        else{
+            res.status(400).send({message: "User not found"})
+        }
+    })
+    .catch(e => {
+        res.status(400).json({message:"User not found"})
+    })
+    
+})
+
 
 app.get("/get/:email",(req: Request, res: Response)=>{
     const email = req.params.email

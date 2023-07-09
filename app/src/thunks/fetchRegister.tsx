@@ -16,13 +16,13 @@ export const fetchRegister = createAsyncThunk<registerResponse,Credentials,{ rej
         const response = await fetch("http://localhost:8080/register",requestOptions)
 
         if(response.status !== 201){
-            console.log('rejected')
             return thunkAPI.rejectWithValue({
                 message: "Failed to register"
             })
         }
 
         const data: registerResponse = await response.json()
+        localStorage.setItem("accessToken",data.token)
         return data
     }
 )

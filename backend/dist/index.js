@@ -32,9 +32,9 @@ const cors_1 = __importDefault(require("cors"));
 const body_parser_1 = __importDefault(require("body-parser"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const database_1 = __importDefault(require("./config/database"));
-const userModel_1 = __importDefault(require("./models/userModel"));
-const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const userModel_1 = require("./models/userModel");
 const isAuthenticated_middleware_1 = __importDefault(require("./middleware/isAuthenticated.middleware"));
+const generateToken_1 = __importDefault(require("./middleware/generateToken"));
 dotenv.config();
 const app = (0, express_1.default)();
 (0, database_1.default)();
@@ -45,44 +45,20 @@ app.get("/", (req, res) => {
     res.send({ message: "Working" });
     console.log("Working");
 });
-app.put("/update", isAuthenticated_middleware_1.default, (req, res) => {
-    const updatedUser = req.body;
-    userModel_1.default.findOne({ email: updatedUser.email })
-        .then(user => {
-        if (user) {
-            if (updatedUser.name) {
-                user.name = updatedUser.name;
-            }
-            if (updatedUser.bio) {
-                user.bio = updatedUser.bio;
-            }
-            if (updatedUser.mobile) {
-                user.mobile = updatedUser.mobile;
-            }
-            if (updatedUser.name) {
-                user.mobile = updatedUser.mobile;
-            }
-            user.save();
-        }
-        else {
-            res.status(400).send({ message: "User not found" });
-        }
-    });
-    res.status(200).json({ message: "User updated Successfully" });
-});
 app.post("/register", (req, res) => {
-    userModel_1.default.findOne({ email: req.body.email })
+    userModel_1.User.findOne({ email: req.body.email })
         .then(user => {
         if (!user) {
             bcrypt_1.default.hash(req.body.password, 5)
                 .then((hashedPassword) => {
-                const user = new userModel_1.default({
+                const user = new userModel_1.User({
                     email: req.body.email,
                     password: hashedPassword
                 });
                 user.save()
                     .then((result) => {
-                    res.status(201).send({ message: "User saved successfully", user: result });
+                    const token = (0, generateToken_1.default)(user._id, user.email);
+                    res.status(201).send({ message: "User saved successfully", user: result, token: token });
                 })
                     .catch((e) => {
                     res.status(500).send({ message: "User didn't save successfully", error: e });
@@ -98,17 +74,14 @@ app.post("/register", (req, res) => {
     });
 });
 app.post("/login", (req, res) => {
-    userModel_1.default.findOne({ email: req.body.email })
+    userModel_1.User.findOne({ email: req.body.email })
         .then((user) => {
         bcrypt_1.default.compare(req.body.password, user.password)
             .then((check) => {
             if (!check) {
                 res.status(400).send({ message: "Password is not correct" });
             }
-            const token = jsonwebtoken_1.default.sign({
-                userId: user._id,
-                userEmail: user.email,
-            }, process.env.SECRET_KEY, { expiresIn: "24h" });
+            const token = (0, generateToken_1.default)(user._id, user.email);
             res.status(200).send({
                 message: "User logged in successfully",
                 user: user,
@@ -126,9 +99,40 @@ app.post("/login", (req, res) => {
         res.send({ message: "Email not found", error: e });
     });
 });
+app.put("/update", isAuthenticated_middleware_1.default, (req, res) => {
+    const updatedUser = req.body;
+    userModel_1.User.findOne({ email: updatedUser.email })
+        .then(user => {
+        if (user) {
+            if (updatedUser.name) {
+                user.name = updatedUser.name;
+            }
+            if (updatedUser.bio) {
+                user.bio = updatedUser.bio;
+            }
+            if (updatedUser.mobile) {
+                user.mobile = updatedUser.mobile;
+            }
+            if (updatedUser.password) {
+                bcrypt_1.default.hash(updatedUser.password, 5)
+                    .then(hashedPass => {
+                    user.password = hashedPass;
+                });
+            }
+            user.save();
+            res.status(200).json({ message: "User updated Successfully" });
+        }
+        else {
+            res.status(400).send({ message: "User not found" });
+        }
+    })
+        .catch(e => {
+        res.status(400).json({ message: "User not found" });
+    });
+});
 app.get("/get/:email", (req, res) => {
     const email = req.params.email;
-    userModel_1.default.findOne({ email: email })
+    userModel_1.User.findOne({ email: email })
         .then(user => {
         res.status(200).json({ message: "Retrieved data successfully", user: user });
     });

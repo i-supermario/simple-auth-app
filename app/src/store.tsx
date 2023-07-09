@@ -1,8 +1,9 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
-import { profileReducer } from "./reducers/profile";
+import { profileReducer } from "./slices/profile";
 import storage from "redux-persist/lib/storage";
-import { FLUSH, PAUSE, PERSIST, PURGE, REGISTER, REHYDRATE, persistReducer } from "redux-persist";
-import { editableProfileReducer } from "./reducers/editableprofile";
+import { FLUSH, PAUSE, PERSIST, PURGE, REGISTER, REHYDRATE, persistReducer, persistStore } from "redux-persist";
+import { editableProfileReducer } from "./slices/editableprofile";
+
 
 const persistConfig = {
     key: 'auth',
@@ -25,4 +26,4 @@ export const store = configureStore({
 
 export type RootState = ReturnType<typeof store.getState>
 export type AppDispatch = typeof store.dispatch
-export default store
+export const persistedStore = persistStore(store)

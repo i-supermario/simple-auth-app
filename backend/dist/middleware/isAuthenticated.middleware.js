@@ -28,10 +28,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const dotenv = __importStar(require("dotenv"));
-const userModel_1 = __importDefault(require("../models/userModel"));
+const userModel_1 = require("../models/userModel");
 dotenv.config();
 function isAuthenticated(req, res, next) {
-    console.log(req.headers.authorization);
     const authToken = req.headers.authorization;
     if (!authToken) {
         return res.status(401).json({ message: "Unauthorized" });
@@ -39,7 +38,7 @@ function isAuthenticated(req, res, next) {
     const token = authToken.split(" ")[1];
     try {
         const user = jsonwebtoken_1.default.verify(token, process.env.SECRET_KEY);
-        const isUserValid = userModel_1.default.findOne({ _id: user.userId });
+        const isUserValid = userModel_1.User.findOne({ _id: user.userId });
         if (!isUserValid) {
             return res.status(401).json({ message: "This token is invalid" });
         }

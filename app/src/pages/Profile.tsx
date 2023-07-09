@@ -2,11 +2,12 @@ import { Box, Button, Card, CardBody, CardHeader, Divider, Flex, Heading, Image,
 import Header from "../components/header";
 import ProfilePic from "../media/logo192.png"
 import { useDispatch, useSelector } from "react-redux";
-import { selectData, selectStatus, statusValues, update } from "../reducers/profile";
-import { editable, notEditable, selectProfileEditableStatus } from "../reducers/editableprofile";
+import { selectData, selectStatus, statusValues } from "../slices/profile";
+import { setEditable, selectProfileEditableStatus } from "../slices/editableprofile";
 import { AppDispatch } from "../store";
-import { useState } from "react";
-import { UserI } from "../types/common";
+import { useEffect, useState } from "react";
+import { editableResponse } from "../types/response";
+import { updateUser } from "../thunks/updateuser";
 
 
 
@@ -16,7 +17,7 @@ import { UserI } from "../types/common";
 export default function Profile(){
 
     const status = useSelector(selectStatus)
-    const data = useSelector(selectData)?.user
+    const data = useSelector(selectData)?.user as editableResponse
     const editableStatus = useSelector(selectProfileEditableStatus)
     const dispatch = useDispatch<AppDispatch>()
     const [profileName,setProfileName] = useState<string>()
@@ -24,10 +25,18 @@ export default function Profile(){
     const [profileMobile,setProfileMobile] = useState<string>()
     const [profilePassword,setProfilePassword] = useState<string>()
 
+    useEffect(()=>{
+        console.log(data?.bio)
+        console.log(data?.mobile)
+        console.log(data?.name)
+        setProfileBio(data?.bio)
+        setProfileMobile(data?.mobile)
+        setProfileName(data?.name)
+        setProfilePassword(data?.password)
+    },[])
+
 
     if(editableStatus){
-        console.log("editable")
-        console.log(editableStatus)
         return(
             <>
                 <Header/>
@@ -47,8 +56,8 @@ export default function Profile(){
                                 </Box>
                                 <Button type="button" colorScheme="blackAlpha" onClick={(e)=>{
                                         e.preventDefault()
-                                        dispatch(notEditable())
-                                        dispatch(update({  name : profileName, bio: profileBio, mobile: profileMobile , email: data?.email, password : profilePassword, __v : data?.__v, _id: data?._id }))
+                                        dispatch(setEditable(false))
+                                        dispatch(updateUser({ name : profileName, bio: profileBio, mobile: profileMobile , email: data?.email, password : profilePassword }))
                                     }}>
                                     Save
                                 </Button>
@@ -112,9 +121,7 @@ export default function Profile(){
             </>
         )
     }
-    else if(status===statusValues.LoggedIn || status===statusValues.SignedUp || !editableStatus){
-        console.log("not editable")
-        console.log(editableStatus)
+    else if(status===statusValues.Success && !editableStatus){
         return(
             <>
                 <Header/>
@@ -134,7 +141,7 @@ export default function Profile(){
                                 </Box>
                                 <Button colorScheme="gray" onClick={(e)=>{
                                         e.preventDefault()
-                                        dispatch(editable())
+                                        dispatch(setEditable(true))
                                     }}>
                                     Edit
                                 </Button>
@@ -157,7 +164,7 @@ export default function Profile(){
                                     </Text>
                                     <Flex width="xs">
                                         <Text as="b">
-                                        {data?.name}
+                                        {profileName}
                                         </Text>
                                     </Flex>
                                 </Flex>
@@ -167,7 +174,7 @@ export default function Profile(){
                                     </Text>
                                     <Flex width="xs">
                                         <Text as="b">
-                                        {data?.bio}
+                                        {profileBio}
                                         </Text>
                                     </Flex>
                                 </Flex>
@@ -177,7 +184,7 @@ export default function Profile(){
                                     </Text>
                                     <Flex width="xs">
                                         <Text as="b">
-                                        {data?.mobile}
+                                        {profileMobile}
                                         </Text>
                                     </Flex>
                                 </Flex>
@@ -196,8 +203,8 @@ export default function Profile(){
                                         PASSWORD
                                     </Text>
                                     <Flex width="xs">
-                                        <Text as="b">
-                                        {data?.password}
+                                        <Text overflowX="clip" as="b">
+                                        {profilePassword}
                                         </Text>
                                     </Flex>
                                 </Flex>
@@ -208,22 +215,14 @@ export default function Profile(){
             </>
         )
     }
-    if(status===statusValues.Rejected){
+    else{
         return(
             <>
                 <Box>
-                    Registration failed
+                    Loading
                 </Box>
             </>
-        )
+            )
     }
-
-    return(
-        <>
-            <Box>
-                Loading
-            </Box>
-        </>
-        )
     
 }
