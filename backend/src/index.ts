@@ -38,18 +38,18 @@ app.post("/register",(req : Request,res : Response)=>{
                 .then((result)=>{
                     
                     const token = generateToken(user._id,user.email)
-                    res.status(201).send({message: "User saved successfully",user: result,token: token})
+                    return res.status(201).send({message: "User saved successfully",user: result,token: token})
                 })
                 .catch((e)=>{
-                    res.status(500).send({message : "User didn't save successfully",error : e})
+                    return res.status(500).send({message : "User didn't save successfully",error : e})
                 })
             })
             .catch((e)=>{
-                res.status(500).send({message : "Password didn't hash successfully",error : e})
+                return res.status(500).send({message : "Password didn't hash successfully",error : e})
             })
         }
         else{
-            res.status(201).send({message: "User already exists"})
+            return res.status(201).send({message: "User already exists"})
         }
     })
     
@@ -63,17 +63,17 @@ app.post("/login",(req: Request,res: Response)=>{
         bcrypt.compare(req.body.password,user.password)
         .then((check)=>{
             if(!check){
-                res.status(400).send({message: "Password is not correct"})
+                return res.status(400).send({message: "Password is not correct"})
             }
             const token = generateToken(user._id,user.email)
-            res.status(200).send({
+            return res.status(200).send({
                 message: "User logged in successfully",
                 user: user,
                 token: token
             })
         })
         .catch((e)=>{
-            res.status(400).send({
+            return res.status(400).send({
                 message: "Password is not correct",
                 error: e
             })
@@ -81,7 +81,7 @@ app.post("/login",(req: Request,res: Response)=>{
 
     })
     .catch((e)=>{
-        res.send({message:"Email not found",error:e})
+        return res.send({message:"Email not found",error:e})
     })
 })
 
@@ -106,14 +106,14 @@ app.put("/update",isAuthenticated,(req: Request,res: Response)=>{
                 })
             }
             user.save()
-            res.status(200).json({message: "User updated Successfully"})
+            return res.status(200).json({message: "User updated Successfully"})
         }
         else{
-            res.status(400).send({message: "User not found"})
+            return res.status(400).send({message: "User not found"})
         }
     })
     .catch(e => {
-        res.status(400).json({message:"User not found"})
+        return res.status(400).json({message:"User not found"})
     })
     
 })

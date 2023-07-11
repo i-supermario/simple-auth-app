@@ -53,6 +53,12 @@ const profileSlice = createSlice({
                 }
             }
         })
+        .addMatcher(isAnyOf(fetchRegister.pending,fetchLogin.pending),(state) => {
+            state.status = statusValues.Pending
+        })
+        .addMatcher(isAnyOf(fetchRegister.rejected,fetchLogin.rejected),(state) => {
+            state.status = statusValues.Rejected
+        })
         .addMatcher(isAnyOf(fetchRegister.fulfilled,fetchLogin.fulfilled),(state,action)=>{
             state.data = action.payload
             state.status = statusValues.Success

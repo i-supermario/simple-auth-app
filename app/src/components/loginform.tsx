@@ -21,8 +21,8 @@ export default function LoginForm(): JSX.Element{
     return(
         <>
             <Input placeholder="Email" size="md" value={email} onChange = {(e)=>{setEmail(e.target.value)}} />
-            <Input placeholder="Password" size="md" value={password} onChange = {(e)=>{setPassword(e.target.value)} }/>
-            <Button colorScheme="blue" onClick={()=>{
+            <Input type="password" placeholder="Password" size="md" value={password} onChange = {(e)=>{setPassword(e.target.value)} }/>
+            <Button isDisabled = {email.length === 0 || password.length === 0} colorScheme="blue" onClick={()=>{
                 handleClick();
                 setEmail('')
                 setPassword('')

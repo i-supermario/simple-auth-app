@@ -1,11 +1,11 @@
 import { Flex } from "@chakra-ui/react";
-import ToggleColor from "./togglecolor";
-import DropDown from "./dropdown";
+import ToggleColor from "../components/togglecolor";
+import DropDown from "../components/dropdown";
 
 export default function Header(){
     return(
         <>
-            <Flex paddingX="10" justifyContent="space-between">
+            <Flex padding={"30px"} justifyContent="space-between" top="0">
                 <ToggleColor/>
                 <DropDown/>
             </Flex>

@@ -22,7 +22,7 @@ function SignUpForm() : JSX.Element {
         <>
             <Input placeholder="Email" size="md" value={email} onChange={(e)=>{setEmail(e.target.value)}}/>
             <Input placeholder="Password" size="md" value={password} onChange={(e)=>{setPassword(e.target.value)}}/>
-            <Button type="submit" colorScheme="blue" onClick={(e)=>{
+            <Button isDisabled = {email === "" || password === ""} type="submit" colorScheme="blue" onClick={(e)=>{
                 handleClick()
                 setEmail('')
                 setPassword('')
