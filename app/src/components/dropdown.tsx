@@ -1,14 +1,17 @@
 import { Button, Image, Menu, MenuButton, MenuItem, MenuList, StatDownArrow } from "@chakra-ui/react"
 import ProfilePic from "../media/logo192.png"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { AppDispatch } from "../store"
-import { resetState } from "../slices/profile"
+import { resetState, selectData } from "../slices/profile"
 import { useNavigate } from "react-router"
+import { Link } from "react-router-dom"
 
 
 
 
 export default function DropDown(){
+
+    const userName = useSelector(selectData)?.user.name
 
     const dispatch = useDispatch<AppDispatch>()
     const navigate = useNavigate()
@@ -16,11 +19,12 @@ export default function DropDown(){
         <>
             <Menu>
                 <MenuButton as={Button} rightIcon={<StatDownArrow color="black"/>} leftIcon={<Image boxSize="20px" src={ProfilePic}/>}>
-                    Name bata de
+                    {
+                        userName ? userName : "pehchan kaun?"
+                    }
                 </MenuButton>
                 <MenuList>
-                    <MenuItem as="button">My Profile</MenuItem>
-                    <MenuItem as="button">Group Chat</MenuItem>
+                    <MenuItem as="button"><Link to={"/profile"}>My Profile</Link></MenuItem>
                     <MenuItem as="button" color="red" onClick={()=>{
                                 dispatch(resetState())
                                 navigate("/login")

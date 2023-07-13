@@ -118,6 +118,36 @@ app.put("/update",isAuthenticated,(req: Request,res: Response)=>{
     
 })
 
+app.put("/changepassword",isAuthenticated,(req: Request,res: Response)=>{
+    User.findOne({email: req.body.email})
+    .then(user => {
+        bcrypt.compare(req.body.currentpassword,user.password)
+        .then(check => {
+            if(check){
+                bcrypt.hash(req.body.newpassword,5)
+                .then(hashed => {
+                    user.password = hashed
+                    user.save()
+                    .then( () => {
+                        res.status(200).send({message: "Password updated successfully"})
+                    })
+                })
+                .catch(e => {
+                    res.status(400).send({message: "Could not encrypt password",e})
+                })
+            }
+            else{
+                res.status(400).send({message: "Hash check failed"})
+            }
+        })
+        .catch(e => {
+            res.status(400).send({message: "Password doesn't match",e})
+        })
+    })
+    .catch(e => {
+        res.status(400).send({message: "User not found",e})
+    })
+})
 
 app.get("/get/:email",(req: Request, res: Response)=>{
     const email = req.params.email

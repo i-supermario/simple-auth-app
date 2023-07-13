@@ -70,6 +70,6 @@ export const profileReducer = profileSlice.reducer
 
 export const { resetState } = profileSlice.actions
 
-export const selectStatus = (state: RootState) => state.profile.status 
+export const selectStatus = (state: RootState) => state.persistedReducer.profile.status 
 
-export const selectData = (state: RootState) => state.profile.data;
+export const selectData = (state: RootState) => state.persistedReducer.profile.data;

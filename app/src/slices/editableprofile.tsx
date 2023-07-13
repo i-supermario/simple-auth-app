@@ -23,4 +23,4 @@ export const { setEditable } = editableProfile.actions
 
 export const editableProfileReducer = editableProfile.reducer
 
-export const selectProfileEditableStatus = (state: RootState) => state.profileEditable.editable
+export const selectProfileEditableStatus = (state: RootState) => state.persistedReducer.profileEditable.editable

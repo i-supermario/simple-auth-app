@@ -1,4 +1,4 @@
-import { Alert, AlertIcon, AlertTitle, Box, Button, Card, CardBody, CardHeader, Container, Divider, Flex, Heading, Image, Input, Spinner, Stack, StackDivider, Text } from "@chakra-ui/react";
+import { Alert, AlertIcon, AlertTitle, Box, Button, Card, CardBody, CardHeader, Divider, Flex, Heading, Image, Spinner, Stack, StackDivider, Text } from "@chakra-ui/react";
 import Header from "../layout/header";
 import ProfilePic from "../media/logo192.png"
 import { useDispatch, useSelector } from "react-redux";
@@ -10,6 +10,7 @@ import { editableResponse } from "../types/response";
 import { updateUser } from "../thunks/updateuser";
 import ProfileAttribute from "../components/profileattribute";
 import Footer from "../layout/footer";
+import PasswordChangePopup from "../components/passwordpopup";
 
 
 
@@ -36,12 +37,11 @@ export default function Profile(){
     if(status===statusValues.Success){
         return(
             <>
-                {/* <Container display={"flex"} flexDirection={"column"} rowGap={"50px"} paddingY={"50px"} > */}
                     <Header/>
                     <Box width="auto" display="flex" flexDirection="column" rowGap="5" alignItems="center">
                         <Heading textAlign="center">Personal Info</Heading>
                         <Text textAlign="center">Basic stuff</Text>
-                        <Card width="2xl" paddingY="5">
+                        <Card width="2xl">
                             <CardHeader>
                                 <Flex justifyContent="space-between" columnGap="">
                                     <Box>
@@ -86,26 +86,19 @@ export default function Profile(){
                                     <ProfileAttribute attributeName="BIO" attribute={profileBio} setAttribute={setProfileBio}/>
                                     <ProfileAttribute attributeName="PHONE" attribute={profileMobile} setAttribute={setProfileMobile}/>
                                     {
-                                        editableStatus ?
-                                        <>
-                                            <Flex justifyContent="space-around" >
-                                                <Text textColor="gray" >
-                                                    PASSWORD
-                                                </Text>
-                                                <Flex width="xs">
-                                                        <Input type="text" value={profilePassword} onChange={(e)=>{setProfilePassword(e.target.value)}}/>
-                                                </Flex>
-                                            </Flex> 
-                                        </>
+                                        editableStatus ? "" 
                                         :
-                                        ""
+                                        <>
+                                            <Flex justifyContent="center">
+                                                <PasswordChangePopup/>
+                                            </Flex>
+                                        </> 
                                     }
                                 </Stack>
                             </CardBody>
                         </Card>
                     </Box>
                     <Footer/>
-                {/* </Container> */}
             </>
         )
     }

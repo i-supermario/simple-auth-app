@@ -3,6 +3,7 @@ import { profileReducer } from "./slices/profile";
 import storage from "redux-persist/lib/storage";
 import { FLUSH, PAUSE, PERSIST, PURGE, REGISTER, REHYDRATE, persistReducer, persistStore } from "redux-persist";
 import { editableProfileReducer } from "./slices/editableprofile";
+import { passwordReducer } from "./slices/password";
 
 
 const persistConfig = {
@@ -15,7 +16,10 @@ const reducers = combineReducers({profile: profileReducer, profileEditable : edi
 const persistedReducer = persistReducer(persistConfig,reducers)
 
 export const store = configureStore({
-    reducer: persistedReducer,
+    reducer: {
+      persistedReducer : persistedReducer,
+      passwordReducer: passwordReducer
+    },
     middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {

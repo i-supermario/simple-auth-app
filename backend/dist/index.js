@@ -130,6 +130,36 @@ app.put("/update", isAuthenticated_middleware_1.default, (req, res) => {
         return res.status(400).json({ message: "User not found" });
     });
 });
+app.put("/changepassword", isAuthenticated_middleware_1.default, (req, res) => {
+    userModel_1.User.findOne({ email: req.body.email })
+        .then(user => {
+        bcrypt_1.default.compare(req.body.currentpassword, user.password)
+            .then(check => {
+            if (check) {
+                bcrypt_1.default.hash(req.body.newpassword, 5)
+                    .then(hashed => {
+                    user.password = hashed;
+                    user.save()
+                        .then(() => {
+                        res.status(200).send({ message: "Password updated successfully" });
+                    });
+                })
+                    .catch(e => {
+                    res.status(400).send({ message: "Could not encrypt password", e });
+                });
+            }
+            else {
+                res.status(400).send({ message: "Hash check failed" });
+            }
+        })
+            .catch(e => {
+            res.status(400).send({ message: "Password doesn't match", e });
+        });
+    })
+        .catch(e => {
+        res.status(400).send({ message: "User not found", e });
+    });
+});
 app.get("/get/:email", (req, res) => {
     const email = req.params.email;
     userModel_1.User.findOne({ email: email })
