@@ -11,7 +11,7 @@ export const updateUser = createAsyncThunk<updateResponse,editableResponse,{ rej
         const requestOptions = {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json','Authorization': `Bearer ${localStorage.getItem("accessToken")}`, },
-            body: JSON.stringify({email: updatedUser.email, name: updatedUser.name,bio: updatedUser.bio, password: updatedUser.password, mobile: updatedUser.mobile })
+            body: JSON.stringify({email: updatedUser.email, name: updatedUser.name,bio: updatedUser.bio, password: updatedUser.password, mobile: updatedUser.mobile,imageurl: updatedUser.imageurl })
         };
         const response = await fetch("http://localhost:8080/update",requestOptions)
 

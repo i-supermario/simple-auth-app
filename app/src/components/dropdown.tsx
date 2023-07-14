@@ -11,16 +11,16 @@ import { Link } from "react-router-dom"
 
 export default function DropDown(){
 
-    const userName = useSelector(selectData)?.user.name
+    const user = useSelector(selectData)?.user
 
     const dispatch = useDispatch<AppDispatch>()
     const navigate = useNavigate()
     return(
         <>
             <Menu>
-                <MenuButton as={Button} rightIcon={<StatDownArrow color="black"/>} leftIcon={<Image boxSize="20px" src={ProfilePic}/>}>
+                <MenuButton as={Button} rightIcon={<StatDownArrow color="black"/>} leftIcon={<Image boxSize="20px" src={user?.imageurl}/>}>
                     {
-                        userName ? userName : "pehchan kaun?"
+                        user?.name ? user.name : "pehchan kaun?"
                     }
                 </MenuButton>
                 <MenuList>

@@ -5,7 +5,8 @@ export interface UserI extends mongoose.Document{
     password: string,
     name?: string,
     mobile?: string,
-    bio?: string
+    bio?: string,
+    imageurl?: string
 };
 
 
@@ -32,6 +33,12 @@ const userSchema = new mongoose.Schema({
         type: String,
         required : false,
     },
+    imageurl:{
+        type: String,
+        default: "backend\src\media\favicon.ico",
+        required : false,
+    },
+
 
 
 })

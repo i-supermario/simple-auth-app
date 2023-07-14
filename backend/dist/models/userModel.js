@@ -29,6 +29,11 @@ const userSchema = new mongoose_1.default.Schema({
         type: String,
         required: false,
     },
+    imageurl: {
+        type: String,
+        default: "backend\src\media\favicon.ico",
+        required: false,
+    },
 });
 exports.User = mongoose_1.default.model('User', userSchema);
 //# sourceMappingURL=userModel.js.map

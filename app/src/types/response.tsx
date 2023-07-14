@@ -14,6 +14,7 @@ export interface editableResponse{
     password?: string,
     mobile?: string,
     bio?: string
+    imageurl?: string
 }
 
 export interface updateResponse {

@@ -90,6 +90,9 @@ app.put("/update",isAuthenticated,(req: Request,res: Response)=>{
     User.findOne({email: updatedUser.email})
     .then(user => {
         if(user){
+            if(updatedUser.imageurl){
+                user.imageurl = updatedUser.imageurl
+            }
             if(updatedUser.name){
                 user.name = updatedUser.name
             }

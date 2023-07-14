@@ -104,6 +104,9 @@ app.put("/update", isAuthenticated_middleware_1.default, (req, res) => {
     userModel_1.User.findOne({ email: updatedUser.email })
         .then(user => {
         if (user) {
+            if (updatedUser.imageurl) {
+                user.imageurl = updatedUser.imageurl;
+            }
             if (updatedUser.name) {
                 user.name = updatedUser.name;
             }

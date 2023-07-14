@@ -11,6 +11,7 @@ import { updateUser } from "../thunks/updateuser";
 import ProfileAttribute from "../components/profileattribute";
 import Footer from "../layout/footer";
 import PasswordChangePopup from "../components/passwordpopup";
+import ImageAttribute from "../components/imageattribute";
 
 
 
@@ -24,6 +25,7 @@ export default function Profile(){
     const editableStatus = useSelector(selectProfileEditableStatus)
     const dispatch = useDispatch<AppDispatch>()
     const [profileName,setProfileName] = useState<string>()
+    const [profilePicture,setProfilePicture] = useState<string>()
     const [profileBio,setProfileBio] = useState<string>()
     const [profileMobile,setProfileMobile] = useState<string>()
     const [profilePassword,setProfilePassword] = useState<string>()
@@ -32,7 +34,8 @@ export default function Profile(){
         setProfileBio(data?.bio)
         setProfileMobile(data?.mobile)
         setProfileName(data?.name)
-    },[data?.bio,data?.mobile,data?.name])
+        setProfilePicture(data?.imageurl)
+    },[data?.bio,data?.mobile,data?.name,data?.imageurl])
 
     if(status===statusValues.Success){
         return(
@@ -57,7 +60,7 @@ export default function Profile(){
                                         <Button type="button" colorScheme="whatsapp" onClick={(e)=>{
                                             e.preventDefault()
                                             dispatch(setEditable(false))
-                                            dispatch(updateUser({ name : profileName, bio: profileBio, mobile: profileMobile , email: data?.email, password : profilePassword }))
+                                            dispatch(updateUser({ name : profileName, bio: profileBio, mobile: profileMobile , email: data?.email, password : profilePassword,imageurl: profilePicture }))
                                         }}>
                                         Save
                                     </Button>
@@ -74,14 +77,7 @@ export default function Profile(){
                             <Divider color="gray.300"  />
                             <CardBody paddingX="0">
                                 <Stack divider={<StackDivider/>} rowGap="3" >
-                                    <Flex justifyContent="space-around" >
-                                        <Text textColor="gray" >
-                                            PHOTO
-                                        </Text>
-                                        <Flex width="xs">
-                                            <Image boxSize="100px" src={ProfilePic} alt=""/>
-                                        </Flex>
-                                    </Flex>
+                                    <ImageAttribute attributeName="Profile Picture" attribute={profilePicture} setAttribute={setProfilePicture} />
                                     <ProfileAttribute attributeName="NAME" attribute={profileName} setAttribute={setProfileName}/>
                                     <ProfileAttribute attributeName="BIO" attribute={profileBio} setAttribute={setProfileBio}/>
                                     <ProfileAttribute attributeName="PHONE" attribute={profileMobile} setAttribute={setProfileMobile}/>
